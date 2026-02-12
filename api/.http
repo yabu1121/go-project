@@ -7,3 +7,24 @@ Content-Type: application/json
     "email": "user1@test.com",
     "password": "password123"
 }
+
+###
+
+POST {{base_url}}/login
+Content-Type: application/json
+
+{
+    "email": "user1@test.com",
+    "password": "password123"
+}
+
+
+###
+
+POST {{base_url}}/logout
+Content-Type: application/json
+
+{
+    "email": "user1@test.com",
+    "password": "password123"
+}
