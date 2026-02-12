@@ -28,3 +28,37 @@ Content-Type: application/json
     "email": "user1@test.com",
     "password": "password123"
 }
+
+
+###
+
+GET {{base_url}}/tasks
+
+
+###
+
+GET {{base_url}}/tasks/2
+
+
+###
+
+POST {{base_url}}/tasks
+Content-Type: application/json
+
+{
+    "title": "hello world"
+}
+
+###
+
+PUT {{base_url}}/tasks/1
+Content-Type: application/json
+
+{
+    "title": "updated"
+}
+
+###
+
+DELETE {{base_url}}/tasks/1
+

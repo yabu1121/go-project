@@ -4,13 +4,14 @@ import (
 	"go-rest-api/controller"
 	"os"
 
-	"github.com/labstack/echo-contrib/echojwt"
+	
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo-jwt/v4"
 )
 
 func NewRouter(
 	uc controller.IUserController, 
-	tc controller.ITaskController
+	tc controller.ITaskController,
 ) *echo.Echo {
 	e := echo.New()
 	e.POST("/signup", uc.SignUp)
@@ -19,7 +20,7 @@ func NewRouter(
 
 	t := e.Group("/tasks")
 	t.Use(echojwt.WithConfig(echojwt.Config{
-		SigningKey: []byte(os.Getenv("SECRET")),
+		SigningKey: []byte(os.Getenv("SECRET")),	
 		TokenLookup: "cookie:token",
 	}))
 	t.GET("", tc.GetAllTasks)
