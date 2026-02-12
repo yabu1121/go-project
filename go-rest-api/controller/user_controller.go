@@ -64,10 +64,18 @@ func (uc *userController) Login(c echo.Context) error {
 	cookie.Value = tokenString
 	cookie.Expires = time.Now().Add(24 * time.Hour)
 	cookie.Path = "/"
-	cookie.Domain = os.Getenv("API_DOMAIN")
-	cookie.Secure = true
+	cookie.Path = "/"
 	cookie.HttpOnly = true
-	cookie.SameSite = http.SameSiteNoneMode
+
+	if os.Getenv("GO_ENV") == "dev" {
+		cookie.Domain = ""
+		cookie.Secure = false
+		cookie.SameSite = http.SameSiteDefaultMode
+	} else {
+		cookie.Domain = os.Getenv("API_DOMAIN")
+		cookie.Secure = true
+		cookie.SameSite = http.SameSiteNoneMode
+	}
 	c.SetCookie(cookie)
 	return c.NoContent(http.StatusOK)
 }
@@ -80,10 +88,18 @@ func (uc *userController) Logout(c echo.Context) error {
 	cookie.Value = ""
 	cookie.Expires = time.Now()
 	cookie.Path = "/"
-	cookie.Domain = os.Getenv("API_DOMAIN")
-	cookie.Secure = true
+	cookie.Path = "/"
 	cookie.HttpOnly = true
-	cookie.SameSite = http.SameSiteNoneMode
+
+	if os.Getenv("GO_ENV") == "dev" {
+		cookie.Domain = ""
+		cookie.Secure = false
+		cookie.SameSite = http.SameSiteDefaultMode
+	} else {
+		cookie.Domain = os.Getenv("API_DOMAIN")
+		cookie.Secure = true
+		cookie.SameSite = http.SameSiteNoneMode
+	}
 	c.SetCookie(cookie)
 	return c.NoContent(http.StatusOK)
 }

@@ -12,8 +12,7 @@ export const useAuth = () => {
       return await api.post('/login', user)
     },
     onSuccess: () => {
-      router.refresh()
-      // router.push('/dashboard') // Redirect if needed
+      router.push('/todo')
     },
     onError: (err: any) => {
       // Handle error
@@ -26,7 +25,7 @@ export const useAuth = () => {
       return await api.post('/signup', user)
     },
     onSuccess: () => {
-      router.push('/')
+      router.push('/todo')
     },
   })
 
