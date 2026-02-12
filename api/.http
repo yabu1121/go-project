@@ -1,32 +1,51 @@
 @base_url = http://localhost:8080
 
+###
+
+# 1. まずトークンを取得
+# @name getCsrf
+GET {{base_url}}/csrf-token
+
+###
+
+# 変数にセット（レスポンスボディから抽出）
+@token = {{getCsrf.response.body.csrf_token}}
+
+# 2. サインアップ
 POST {{base_url}}/signup
 Content-Type: application/json
+X-CSRF-Token: {{token}}
+Cookie: _csrf={{token}}
 
 {
-    "email": "user1@test.com",
-    "password": "password123"
+    "email": "tfaest-nfo@sek.ne.jp",
+    "password": "dudmmypewassword"
 }
-
 ###
 
+@name login
 POST {{base_url}}/login
 Content-Type: application/json
+X-CSRF-Token: {{token}}
+Cookie: _csrf={{token}}
 
 {
-    "email": "user1@test.com",
-    "password": "password123"
+    "email": "tfaest-nfo@sek.ne.jp",
+    "password": "dudmmypewassword"
 }
 
 
 ###
 
+@name logout
 POST {{base_url}}/logout
 Content-Type: application/json
+X-CSRF-Token: {{token}}
+Cookie: _csrf={{token}}
 
 {
-    "email": "user1@test.com",
-    "password": "password123"
+    "email": "tfaest-nfo@sek.ne.jp",
+    "password": "dudmmypewassword"
 }
 
 

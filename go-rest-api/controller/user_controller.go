@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"go-rest-api/model"
 	"go-rest-api/usecase"
 	"net/http"
@@ -30,7 +32,6 @@ func NewUserController(uu usecase.IUserUsecase) IUserController {
 	return &userController{uu}
 }
 
-
 // SignUpはユーザーがサインアップする
 func (uc *userController) SignUp(c echo.Context) error {
 	user := model.User{}
@@ -43,7 +44,6 @@ func (uc *userController) SignUp(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, userRes)
 }
-
 
 // Loginはユーザーがログインする
 // cookieにtokenを保存する
@@ -60,9 +60,9 @@ func (uc *userController) Login(c echo.Context) error {
 	}
 	// cookie構造体を初期化
 	cookie := new(http.Cookie)
-	cookie.Name ="token"
+	cookie.Name = "token"
 	cookie.Value = tokenString
-	cookie.Expires = time.Now().Add(24*time.Hour)
+	cookie.Expires = time.Now().Add(24 * time.Hour)
 	cookie.Path = "/"
 	cookie.Domain = os.Getenv("API_DOMAIN")
 	cookie.Secure = true
@@ -72,12 +72,11 @@ func (uc *userController) Login(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-
 // Logoutはユーザーがログアウトする
 // cookieを削除する
 func (uc *userController) Logout(c echo.Context) error {
 	cookie := new(http.Cookie)
-	cookie.Name ="token"
+	cookie.Name = "token"
 	cookie.Value = ""
 	cookie.Expires = time.Now()
 	cookie.Path = "/"
@@ -89,10 +88,28 @@ func (uc *userController) Logout(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-
 func (uc *userController) CsrfToken(c echo.Context) error {
-	token := c.Get("csrf").(string)
-	return c.JSON(http.StatusOK, echo.Map{
-		"csrf_token": token,
-	})
+	// Echo の CSRF ミドルウェアのコンテキストに依存せず、
+	// 自前でトークンを生成して CSRF 用クッキーとレスポンスを返す。
+
+	// ランダムな 32 バイトのトークンを生成（64 文字の hex 文字列になる）
+	b := make([]byte, 32)
+	if _, err := rand.Read(b); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to generate csrf token"})
+	}
+	token := hex.EncodeToString(b)
+
+	// Echo の CSRF ミドルウェアがデフォルトで期待するクッキー名と同じ "_csrf" を使用
+	cookie := &http.Cookie{
+		Name:     "_csrf",
+		Value:    token,
+		Path:     "/",
+		Domain:   "", // API ドメインに縛らない（localhost 環境向け）
+		HttpOnly: true,
+		// CSRF ミドルウェアのデフォルトと合わせて SameSite は指定しない（Default）
+		// ローカル HTTP で動かすため Secure は false のまま
+	}
+	http.SetCookie(c.Response(), cookie)
+
+	return c.JSON(http.StatusOK, map[string]string{"csrf_token": token})
 }
