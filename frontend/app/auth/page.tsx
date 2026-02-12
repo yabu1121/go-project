@@ -31,12 +31,11 @@ export default function Auth() {
   return (
     <div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
       <div className="flex items-center">
-        <CheckBadgeIcon className="h-8 w-8 mr-2 text-blue-500" />
         <span className="text-center text-3xl font-extrabold">
-          Todo App by Golang/Next.js
+          Todo
         </span>
       </div>
-      <h2 className="my-6">{isLogin ? 'Login' : 'Create a new account'}</h2>
+      <h2 className="my-6">{isLogin ? 'ログイン' : '新規登録'}</h2>
       <AuthForm
         handleSubmit={handleSubmit}
         email={email}
@@ -46,7 +45,7 @@ export default function Auth() {
         isLogin={isLogin}
         isSending={isSending}
       />
-      <p className="text-sm text-blue-500 cursor-pointer" onClick={() => setIsLogin(!isLogin)}>{isLogin ? 'Don\'t have an account?' : 'Already have an account?'}</p>
+      <p className="text-sm text-blue-500 cursor-pointer font-medium mt-4 underline hover:text-blue-600" onClick={() => setIsLogin(!isLogin)}>{isLogin ? 'アカウント登録はこちら' : 'ログインはこちら'}</p>
     </div>
   )
 }
