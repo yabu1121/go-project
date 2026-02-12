@@ -1,8 +1,12 @@
 package controller
 
 import (
+	"go-rest-api/model"
 	"go-rest-api/usecase"
+	"net/http"
+	"strconv"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
@@ -15,7 +19,7 @@ type ITaskController interface {
 }
 
 type TaskController struct {
-	tu ITaskUsecase
+	tu usecase.ITaskUsecase
 }
 
 func NewTaskController (tu usecase.ITaskUsecase) ITaskController {
@@ -23,9 +27,78 @@ func NewTaskController (tu usecase.ITaskUsecase) ITaskController {
 }
 
 
+// GetAllTasksは全てのタスクを取得する
+func (tc *TaskController)GetAllTasks (c echo.Context) error{
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"]
 
-func (tc *TaskController)GetAllTasks (c echo.Context) error
-func (tc *TaskController)GetTaskById (c echo.Context) error
-func (tc *TaskController)CreateTask (c echo.Context) error
-func (tc *TaskController)UpdateTask (c echo.Context) error
-func (tc *TaskController)DeleteTask (c echo.Context) error
+	tasksRes, err := tc.tu.GetAllTasks(uint(userId.(float64)))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, tasksRes)
+}
+
+// GetTaskByIdは指定されたIDのタスクを取得する
+func (tc *TaskController)GetTaskById (c echo.Context) error{
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"]
+	id := c.Param("taskId")
+	taskId, _ := strconv.Atoi(id)
+	taskRes, err := tc.tu.GetTaskById(uint(userId.(float64)), uint(taskId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, taskRes)
+}
+
+
+func (tc *TaskController)CreateTask (c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"]
+
+	task := model.Task{}
+	if err := c.Bind(&task); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	task.UserId = uint(userId.(float64))
+	taskRes, err := tc.tu.CreateTask(task)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, taskRes)
+}
+
+func (tc *TaskController)UpdateTask (c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"]
+	id := c.Param("taskId")
+	taskId, _ := strconv.Atoi(id)
+
+	task := model.Task{}
+	if err := c.Bind(&task); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	taskRes, err := tc.tu.UpdateTask(task, uint(userId.(float64)), uint(taskId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, taskRes)
+}
+
+func (tc *TaskController)DeleteTask (c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"]
+	id := c.Param("taskId")
+	taskId, _ := strconv.Atoi(id)
+	err := tc.tu.DeleteTask(uint(userId.(float64)), uint(taskId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.NoContent(http.StatusNoContent)
+}
