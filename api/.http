@@ -8,7 +8,6 @@ GET {{base_url}}/csrf-token
 
 ###
 
-# 変数にセット（レスポンスボディから抽出）
 @token = {{getCsrf.response.body.csrf_token}}
 
 # 2. サインアップ

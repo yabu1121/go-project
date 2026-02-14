@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// *gorm.DBは返り血の型
+// *gorm.DBは返り値の型
 func NewDB() *gorm.DB {
 	if os.Getenv("GO_ENV") == "dev" {
 		err := godotenv.Load(); if err != nil {
