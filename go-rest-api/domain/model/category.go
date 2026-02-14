@@ -9,6 +9,6 @@ type Category struct {
 	Name string    `json:"name" gorm:"not null"`
 
 	// *にしたらnullableってこと
-	UserId *uuid.UUID `json:"user_id" gorm:"type:uuid;index"`
-	User   User       `json:"user" gorm:"foreignKey:UserId; constraint:OnDelete:CASCADE"`
+	UserID *uuid.UUID `json:"user_id" gorm:"type:uuid;index"`
+	User   User       `json:"user" gorm:"foreignKey:UserID; constraint:OnDelete:CASCADE"`
 }

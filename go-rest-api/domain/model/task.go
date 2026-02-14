@@ -12,8 +12,8 @@ type Task struct {
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 
-	UserId uuid.UUID `json:"user_id" gorm:"not null;index"`
-	User   User      `json:"user" gorm:"foreignKey:UserId; constraint:OnDelete:CASCADE"`
+	UserID uuid.UUID `json:"user_id" gorm:"not null;index"`
+	User   User      `json:"user" gorm:"foreignKey:UserID; constraint:OnDelete:CASCADE"`
 }
 
 type TaskResponse struct {
