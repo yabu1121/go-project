@@ -2,7 +2,7 @@ package model
 
 import (
 	"time"
-
+	
 	"github.com/google/uuid"
 )
 
@@ -12,7 +12,7 @@ type PublicFee struct {
 	FeeType string `json:"fee_type" gorm:"not null"`
 	MonthlyFee int64 `json:"monthly_fee" gorm:"not null"`
 	UsageMonth string `json:"usage_month" gorm:"not null"`
-	BillingDate string `json:"billing_date" gorm:"not null"`
+	BillingDate time.Time `json:"billing_date" gorm:"not null"`
 
 	UserID uuid.UUID `json:"user_id" gorm:"type:uuid;not null;index"`
 	User User `json:"user" gorm:"foreignKey:UserID; constraint:OnDelete:CASCADE"`
