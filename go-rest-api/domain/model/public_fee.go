@@ -18,7 +18,7 @@ type PublicFee struct {
 	User User `json:"user" gorm:"foreignKey:UserID; constraint:OnDelete:CASCADE"`
 
 	CategoryID uuid.UUID `json:"category_id" gorm:"type:uuid;not null;index"`
-	Category Category `json:"category" gorm:"foreignKey:CategoryId; constraint:OnDelete:CASCADE"`
+	Category Category `json:"category" gorm:"foreignKey:CategoryID; constraint:OnDelete:CASCADE"`
 
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`

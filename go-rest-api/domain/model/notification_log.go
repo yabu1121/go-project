@@ -14,5 +14,5 @@ type NotificationLog struct {
 	Status             string       `json:"status" gorm:"not null;default:'send'"`
 
 	UserID uuid.UUID `json:"user_id" gorm:"type:uuid;not null;index"`
-	User   User      `json:"user" gorm:"foreignKey:UserId; constraint:OnDelete:CASCADE"`
+	User   User      `json:"user" gorm:"foreignKey:UserID; constraint:OnDelete:CASCADE"`
 }
