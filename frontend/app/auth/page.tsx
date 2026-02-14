@@ -1,7 +1,6 @@
 "use client"
 import { useAuth } from '@/hooks/useAuth'
 import { FormEvent, useState } from 'react'
-import { CheckBadgeIcon, ArrowRightOnRectangleIcon, ArrowPathIcon } from '@heroicons/react/24/solid'
 import { AuthForm } from '@/components/AuthForm'
 
 export default function Auth() {
@@ -9,23 +8,13 @@ export default function Auth() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLogin, setIsLogin] = useState(true)
-  const [isSending, setIsSending] = useState(false)
+  const isLoading = loginMutation.isPending || registerMutation.isPending
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsSending(true)
-    if (isLogin) {
-      loginMutation.mutate({
-        email,
-        password,
-      })
-    } else {
-      registerMutation.mutate({
-        email,
-        password,
-      })
-    }
-    setIsSending(false)
+    isLogin 
+      ? loginMutation.mutate({email, password}) 
+      : registerMutation.mutate({email, password})
   }
 
   return (
@@ -43,7 +32,7 @@ export default function Auth() {
         password={password}
         setPassword={setPassword}
         isLogin={isLogin}
-        isSending={isSending}
+        isSending={isLoading}
       />
       <p className="text-sm text-blue-500 cursor-pointer font-medium mt-4 underline hover:text-blue-600" onClick={() => setIsLogin(!isLogin)}>{isLogin ? 'アカウント登録はこちら' : 'ログインはこちら'}</p>
     </div>

@@ -6,6 +6,7 @@ import { Credentials } from '@/types'
 export const useAuth = () => {
   const router = useRouter()
 
+  // Login関数
   const loginMutation = useMutation({
     mutationFn: async (user: Credentials) => {
       await csrf()
@@ -19,6 +20,7 @@ export const useAuth = () => {
     },
   })
 
+  // Register関数
   const registerMutation = useMutation({
     mutationFn: async (user: Credentials) => {
       await csrf()
@@ -29,6 +31,7 @@ export const useAuth = () => {
     },
   })
 
+  // Logout関数
   const logoutMutation = useMutation({
     mutationFn: async () => {
       await csrf()

@@ -1,7 +1,8 @@
 import { ArrowPathIcon } from "@heroicons/react/24/solid"
+import { FormEvent } from "react"
 
 type AuthFormProps = {
-  handleSubmit: (e: React.FormEvent) => void
+  handleSubmit: (e: FormEvent<HTMLFormElement>) => void
   email: string
   setEmail: (e: string) => void
   password: string
@@ -52,11 +53,13 @@ export const AuthForm = ({
           disabled={!email || !password}
         >
 
-          {isLogin ? <div className="flex items-center">
-            {isSending ? <ArrowPathIcon className="animate-spin h-5 w-5 mr-2" /> : <p>Login</p>}
-          </div> : <div className="flex items-center">
-            {isSending ? <ArrowPathIcon className="animate-spin h-5 w-5 mr-2" /> : <p>Sign Up</p>}
-          </div>}
+          {
+            isLogin ? <div className="flex items-center">
+              {isSending ? <ArrowPathIcon className="animate-spin h-5 w-5 mr-2" /> : <p>Login</p>}
+            </div> : <div className="flex items-center">
+              {isSending ? <ArrowPathIcon className="animate-spin h-5 w-5 mr-2" /> : <p>Sign Up</p>}
+            </div>
+          }
         </button>
       </div>
     </form>
